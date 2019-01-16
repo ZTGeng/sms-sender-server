@@ -1,0 +1,22 @@
+{
+  "name": "general-server",
+  "version": "1.0.0",
+  "description": "Sms fetching server",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ZTGeng/general-server.git"
+  },
+  "author": "geng",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ZTGeng/general-server/issues"
+  },
+  "homepage": "https://github.com/ZTGeng/general-server#readme",
+  "dependencies": {
+    "firebase-admin": "^6.5.0"
+  }
+}
