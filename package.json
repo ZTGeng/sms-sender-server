@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ZTGeng/general-server.git"
+    "url": "git+https://github.com/ZTGeng/sms-sender-server.git"
   },
   "author": "geng",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/ZTGeng/general-server/issues"
+    "url": "https://github.com/ZTGeng/sms-sender-server/issues"
   },
-  "homepage": "https://github.com/ZTGeng/general-server#readme",
+  "homepage": "https://github.com/ZTGeng/sms-sender-server#readme",
   "dependencies": {
     "firebase-admin": "^6.5.0"
   }
