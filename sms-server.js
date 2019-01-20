@@ -98,7 +98,7 @@ function create() {
             getBody(req, (data) => {
                 var params = parseParams(data);
                 if (params.password && params.password == serviceAccount.password) {
-                    fetchSms(params.number || DEFAULT_SMS_NUMBER);
+                    fetchSms(params.number || DEFAULT_SMS_NUMBER, req.headers.host);
                     resBuffer.start(res);
                 } else {
                     res.writeHead(401, { "Content-Type": "text/html; charset=utf-8" });
@@ -119,7 +119,7 @@ function create() {
         </form>
         `)
     });
-    }
+}
 
 // 向移动设备发送FCM消息，要求其发送短信文本。
 function fetchSms(number) {
@@ -130,12 +130,14 @@ function fetchSms(number) {
 
     var message = {
         data: {
-            number: number
+            number: number,
+            server: host
         },
         android: {
             collapseKey: 'fetch_sms',
             priority: 'high',
-            ttl: 110000
+            ttl: 110000,
+            restrictedPackageName: 'com.ztgeng.smssenderkotlin'
         },
         token: token
     };
