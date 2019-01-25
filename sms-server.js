@@ -6,6 +6,7 @@ const admin = require('firebase-admin');
 const serviceAccount = require('path/to/serviceAccountKey.json');
 
 const DEFAULT_SMS_NUMBER = 5;
+const PASSWORD_TRYING_LIMIT = 5;
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -17,6 +18,9 @@ admin.initializeApp({
 // 您应该考虑使用更长久的方式保存此Token，例如数据库。
 // 客户端在一些情况下会刷新Token，因此需要提供更新的方式。
 var token;
+
+// 如发现客户端连续输入错误密码，应停止短信读取服务。
+var passwordTryingCount = 0;
 
 // 暂时地保存请求方的http response，以便在获取短信文本后通过它返回给请求方。
 // 您也可以考虑不保存response，而是通过FCM消息的方式发送文本给请求方。
@@ -95,12 +99,19 @@ function create() {
         // 您应该考虑使用数据库等方式保存该口令，并可以基于数据库进一步提供多用户、口令修改等功能。
         // 不可在此代码文件中直接hard code保存口令，以避免将其暴露于公开repo。
         if (method == 'POST' && path == '/fetch') {
+            if (passwordTryingCount >= PASSWORD_TRYING_LIMIT) {
+                res.writeHead(401, { "Content-Type": "text/html; charset=utf-8" });
+                res.end("<p>Service not available</p>");
+                return;
+            }
             getBody(req, (data) => {
                 var params = parseParams(data);
                 if (params.password && params.password == serviceAccount.password) {
+                    passwordTryingCount = 0;
                     fetchSms(params.number || DEFAULT_SMS_NUMBER, req.headers.host);
                     resBuffer.start(res);
                 } else {
+                    passwordTryingCount++;
                     res.writeHead(401, { "Content-Type": "text/html; charset=utf-8" });
                     res.end("<p>Password not matching!</p>");
                 }
